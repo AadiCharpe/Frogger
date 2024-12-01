@@ -269,12 +269,32 @@ scene("game", () => {
             tick = 0;
     });
     onCollideUpdate("frog", "flipped", () => {
-        player.move(-150, 0);
-        onLog = 3;
+        if(player.pos.x > 0) {
+            player.move(-150, 0);
+            onLog = 3;
+        } else {
+            if(lives > 1) {
+                lives--;
+                play("death");
+                go("game");
+            }
+            else
+                go("gameover");
+        }
     });
     onCollideUpdate("frog", "notflipped", () => {
-        player.move(100, 0);
-        onLog = 3;
+        if(player.pos.x < width()) {
+            player.move(100, 0);
+            onLog = 3;
+        } else {
+            if(lives > 1) {
+                lives--;
+                play("death");
+                go("game");
+            }
+            else
+                go("gameover");
+        }
     });
     onUpdate(() => {
         let speed;
@@ -306,6 +326,7 @@ scene("game", () => {
 scene("gameover", () => {
     lives = 3;
     level = 0;
+    time = 0;
     music.paused = true;
     add([
         rect(width(), height()),
